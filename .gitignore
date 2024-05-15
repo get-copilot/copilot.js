@@ -1,0 +1,56 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node.js
+node_modules
+dist
+dist-ssr
+*.local
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Next.js
+.next/
+/out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local environment files
+.env*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# MacOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.log
+*.tmp
+*.pid.lock
+
+# Testing
+/coverage
+
+# Vercel
+.vercel
+
+# Miscelaneous
+*.pem

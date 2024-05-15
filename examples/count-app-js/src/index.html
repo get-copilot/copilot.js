@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <title>Count app using JavaScript</title>
+    <script>
+      // Counter state and API
+      let count = 0
+      const setCount = (newCount) => {
+        count = newCount
+        document.querySelector('#count').textContent = count
+      }
+      const increment = () => setCount(count + 1)
+      const decrement = () => setCount(count - 1)
+    </script>
+  </head>
+
+  <body>
+    <div id="root">
+      <div id="counter">
+        <button onClick="decrement()">－</button>
+        <span id="count">0</span>
+        <button onClick="increment()">＋</button>
+      </div>
+      <div id="copilot"></div>
+    </div>
+
+    <script src="https://sdk.copilotjs.com/v1"></script>
+    <script>
+      const copilot = CopilotJS.create({
+        rootElement: '#copilot',
+        appId: 'your-app-id-here',
+        userId: 'u',
+        companyId: 'c',
+        context: {
+          actions: {
+            increment: increment,
+            decrement: decrement,
+          },
+          actionTypes: `
+            type increment = () => void
+            type decrement = () => void
+          `,
+        },
+        appearance: {
+          welcomePrompts: ['Increment the count.', 'Add 5 to the count.'],
+        },
+      })
+    </script>
+  </body>
+</html>
