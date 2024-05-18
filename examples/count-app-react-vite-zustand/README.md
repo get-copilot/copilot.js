@@ -4,7 +4,7 @@
 
    ```jsx
    <Copilot
-     appId="your-app-id-here"
+     appId="paste-your-app-id-here"
      //...
    />
    ```

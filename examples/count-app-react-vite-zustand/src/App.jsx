@@ -22,7 +22,7 @@ export default function App() {
 
       <Copilot
         id="copilot"
-        appId="your-app-id-here"
+        appId="paste-your-app-id-here"
         userId="u"
         companyId="c"
         context={{
