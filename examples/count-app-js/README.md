@@ -4,7 +4,7 @@
 
    ```js
    const copilot = CopilotJS.create({
-     appId: 'your-app-id-here',
+     appId: 'paste-your-app-id-here',
      //...
    })
    ```
