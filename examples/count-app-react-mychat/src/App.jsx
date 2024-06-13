@@ -33,9 +33,6 @@ export default function App() {
             type increment = () => void
             type decrement = () => void
           `,
-          state: {
-            count: count,
-          },
         }}
       >
         <MyChat className="mt-12" />
