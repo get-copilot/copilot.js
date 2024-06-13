@@ -1,9 +1,7 @@
-'use client'
 import { useState } from 'react'
-import { CopilotProvider, CopilotChat } from '@copilotjs/react'
-
-import '@copilotjs/styles/default.css'
-import './page.css'
+import { CopilotProvider } from '@copilotjs/react'
+import MyChat from './MyChat'
+import Button from './Button'
 
 export default function App() {
   // Counter state
@@ -14,12 +12,14 @@ export default function App() {
 
   return (
     <>
-      <div id="counter">
-        <button onClick={decrement}>－</button>
-        <span>{count}</span>
-        <button onClick={increment}>＋</button>
+      {/* Counter UI */}
+      <div className="flex flex-row bg-white">
+        <Button onClick={decrement}>－</Button>
+        <span className="flex flex-row items-center justify-center w-20 text-2xl">{count}</span>
+        <Button onClick={increment}>＋</Button>
       </div>
 
+      {/* Headless provider and custom copilot UI */}
       <CopilotProvider
         appId="paste-your-app-id-here"
         userId="u"
@@ -33,14 +33,12 @@ export default function App() {
             type increment = () => void
             type decrement = () => void
           `,
+          state: {
+            count: count,
+          },
         }}
       >
-        <CopilotChat
-          id="copilot"
-          appearance={{
-            welcomePrompts: ['Increment the count.', 'Add 3 to the count.'],
-          }}
-        />
+        <MyChat className="mt-12" />
       </CopilotProvider>
     </>
   )

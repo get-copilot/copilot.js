@@ -1,4 +1,4 @@
-# Count app using React, Vite, and Zustand
+# Count app and copilot with custom UI, styled with Tailwind CSS
 
 1. Paste your `appId` in `src/App.jsx`:
 
@@ -6,7 +6,7 @@
    <CopilotProvider
      appId="paste-your-app-id-here"
      //...
-   />
+   >
    ```
 
    Your `appId` can be found in [Dashboard > Apps](https://dashboard.copilotjs.com/apps).

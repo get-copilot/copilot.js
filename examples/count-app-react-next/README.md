@@ -3,7 +3,7 @@
 1. Paste your `appId` in `src/app/page.js`:
 
    ```jsx
-   <Copilot
+   <CopilotProvider
      appId="paste-your-app-id-here"
      //...
    />
