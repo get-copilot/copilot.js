@@ -1,6 +1,8 @@
 'use client'
-import Copilot from '@copilotjs/react'
 import { useState } from 'react'
+import { CopilotProvider, CopilotChat } from '@copilotjs/react'
+
+import '@copilotjs/styles/default.css'
 import './page.css'
 
 export default function App() {
@@ -18,8 +20,7 @@ export default function App() {
         <button onClick={increment}>＋</button>
       </div>
 
-      <Copilot
-        id="copilot"
+      <CopilotProvider
         appId="paste-your-app-id-here"
         userId="u"
         companyId="c"
@@ -33,10 +34,14 @@ export default function App() {
             type decrement = () => void
           `,
         }}
-        appearance={{
-          welcomePrompts: ['Increment the count.', 'Add 5 to the count.'],
-        }}
-      />
+      >
+        <CopilotChat
+          id="copilot"
+          appearance={{
+            welcomePrompts: ['Increment the count.', 'Add 3 to the count.'],
+          }}
+        />
+      </CopilotProvider>
     </>
   )
 }
