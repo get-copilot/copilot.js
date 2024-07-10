@@ -38,11 +38,19 @@ function MessagesList() {
         state === 'running' ||
         state === 'cancelling' ||
         state === 'resettingFromGenerating' ||
-        state === 'resettingFromIdle') && (
-        <Message message={{ role: 'assistant', content: getBusyMessage(state) }} />
-      )}
+        state === 'resettingFromIdle') && <Message message={getBusyMessage(state)} />}
     </div>
   )
+}
+
+function getBodyFromMessage(message) {
+  let body = ''
+  message.content.forEach((part) => {
+    if (part.type === 'text') {
+      body += part.text
+    }
+  })
+  return body
 }
 
 function Message({ message }) {
@@ -62,21 +70,24 @@ function Message({ message }) {
         </div>
 
         {/* Message body */}
-        <div className="whitespace-pre-wrap text-gray-700">{message.content}</div>
+        <div className="whitespace-pre-wrap text-gray-700">{getBodyFromMessage(message)}</div>
       </div>
     </div>
   )
 }
 
 function getBusyMessage(state) {
-  const messageForState = {
+  const textForState = {
     generating: 'Working...',
     running: 'Running...',
     cancelling: 'Cancelling...',
     resettingFromGenerating: 'Resetting...',
     resettingFromIdle: 'Resetting...',
   }
-  return messageForState[state]
+  return {
+    role: 'assistant',
+    content: [{ type: 'text', text: textForState[state] }],
+  }
 }
 
 function SmallAvatar(props) {
