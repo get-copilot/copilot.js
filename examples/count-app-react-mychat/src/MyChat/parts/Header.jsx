@@ -4,7 +4,7 @@ import { useStore } from '../store'
 
 export default function Header() {
   const { setIsOpen } = useStore()
-  const { state, reset } = useCopilot()
+  const { status, reset } = useCopilot()
 
   return (
     <div className="flex-none flex flex-row justify-between border-b">
@@ -24,7 +24,7 @@ export default function Header() {
       {/* Reset button */}
       <button
         onClick={() => reset()}
-        disabled={!(state === 'idle' || state === 'generating')}
+        disabled={!(status === 'idle' || status === 'working' || status === 'cancelling')}
         className="flex-none hover:bg-gray-100 disabled:opacity-10"
       >
         <DocumentIcon className="w-5 h-5 mx-3 my-3.5" />

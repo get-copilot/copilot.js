@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useCopilot } from '@copilotjs/react'
 import ScrollToBottom, { useScrollToBottom, useSticky } from 'react-scroll-to-bottom'
 import { user, assistant } from './roles'
@@ -19,26 +19,36 @@ export default function MessagesPanel() {
 function MessagesList() {
   const [sticky] = useSticky()
   const scrollToBottom = useScrollToBottom()
+  const { status, messages } = useCopilot()
 
-  const { state, messages } = useCopilot()
-
-  // When state transitions to 'generating', scroll the message list to the bottom.
+  // When status transitions to 'working', scroll the message list to the bottom.
   useEffect(() => {
-    if (state === 'generating' && !sticky) scrollToBottom()
-  }, [state])
+    if (status === 'working' && !sticky) scrollToBottom()
+  }, [status])
+
+  // Pad the messages with a busy assistant message, if needed.
+  const paddedMessages = useMemo(() => {
+    const emptyAssistantMessage = {
+      status: 'in_progress',
+      id: 'msg_busy',
+      object: 'thread.message',
+      role: 'assistant',
+      content: [{ type: 'text', text: { value: '' } }],
+    }
+    const lastMessage = messages.at(-1)
+    const paddingIsNeeded =
+      status === 'working' &&
+      lastMessage &&
+      ((lastMessage.object === 'thread.message' && lastMessage.role === 'user') ||
+        (lastMessage.object === 'thread.tool_calls' && lastMessage.status !== 'in_progress'))
+    return paddingIsNeeded ? [...messages, emptyAssistantMessage] : messages
+  }, [messages, status])
 
   return (
     <div className="flex flex-col gap-5 px-2.5 py-4">
-      {/* Conversation between User and Assistant */}
-      {messages.map((message, index) => (
+      {paddedMessages.map((message) => (
         <Message key={message.id} message={message} />
       ))}
-      {/* Message from Assistant, when busy */}
-      {(state === 'generating' ||
-        state === 'running' ||
-        state === 'cancelling' ||
-        state === 'resettingFromGenerating' ||
-        state === 'resettingFromIdle') && <Message message={getBusyMessage(state)} />}
     </div>
   )
 }
@@ -47,47 +57,54 @@ function getBodyFromMessage(message) {
   let body = ''
   message.content.forEach((part) => {
     if (part.type === 'text') {
-      body += part.text
+      body += part.text.value ?? part.text
     }
   })
   return body
 }
 
 function Message({ message }) {
-  return (
-    <div className="flex flex-row">
-      <div className="flex-none ml-1.5 mr-3 -mt-px">
-        <SmallAvatar
-          text={message.role === 'user' ? user.initials : assistant.initials}
-          backgroundColor={message.role === 'user' ? user.color : assistant.color}
-        />
-      </div>
-
-      <div className="flex-1">
-        {/* Message sender */}
-        <div className="font-semibold mb-0.5">
-          {message.role === 'user' ? user.name : assistant.name}
+  if (message.object === 'thread.message')
+    return (
+      <div className="flex flex-row">
+        <div className="flex-none ml-1.5 mr-3 -mt-px">
+          <SmallAvatar
+            text={message.role === 'user' ? user.initials : assistant.initials}
+            backgroundColor={message.role === 'user' ? user.color : assistant.color}
+          />
         </div>
 
-        {/* Message body */}
-        <div className="whitespace-pre-wrap text-gray-700">{getBodyFromMessage(message)}</div>
-      </div>
-    </div>
-  )
-}
+        <div className="flex-1">
+          {/* Message sender */}
+          <div className="font-semibold mb-0.5">
+            {message.role === 'user' ? user.name : assistant.name}
+          </div>
 
-function getBusyMessage(state) {
-  const textForState = {
-    generating: 'Working...',
-    running: 'Running...',
-    cancelling: 'Cancelling...',
-    resettingFromGenerating: 'Resetting...',
-    resettingFromIdle: 'Resetting...',
-  }
-  return {
-    role: 'assistant',
-    content: [{ type: 'text', text: textForState[state] }],
-  }
+          {/* Message body */}
+          <div className="whitespace-pre-wrap text-gray-700">
+            {getBodyFromMessage(message)}
+            {message.status === 'in_progress' && '●'}
+          </div>
+        </div>
+      </div>
+    )
+
+  if (message.object === 'thread.tool_calls' && message.status === 'in_progress')
+    return (
+      <div className="flex flex-row">
+        <div className="flex-none ml-1.5 mr-3 -mt-px">
+          <SmallAvatar text={assistant.initials} backgroundColor={assistant.color} />
+        </div>
+
+        <div className="flex-1">
+          {/* Message sender */}
+          <div className="font-semibold mb-0.5">{assistant.name}</div>
+
+          {/* Message body */}
+          <div className="whitespace-pre-wrap text-gray-700">Working...</div>
+        </div>
+      </div>
+    )
 }
 
 function SmallAvatar(props) {
