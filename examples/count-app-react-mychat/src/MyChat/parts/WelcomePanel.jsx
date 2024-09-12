@@ -7,7 +7,7 @@ const welcomePrompts = ['Increment the count.', 'Add 3 to the count.']
 
 export default function WelcomePanel() {
   const { setDraft } = useStore()
-  const { state, prompt } = useCopilot()
+  const { status, prompt } = useCopilot()
 
   return (
     <div className="flex-1 flex flex-col">
@@ -36,7 +36,7 @@ export default function WelcomePanel() {
               prompt(text)
               setDraft('')
             }}
-            disabled={!(state === 'idle')}
+            disabled={!(status === 'idle')}
             className="text-left px-3 py-3 border rounded-lg disabled:opacity-10 hover:bg-gray-100"
           >
             {text}

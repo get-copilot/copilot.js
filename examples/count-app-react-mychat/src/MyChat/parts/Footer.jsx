@@ -6,21 +6,16 @@ import { useStore } from '../store'
 
 export default function Footer() {
   const { isOpen, draft, setDraft } = useStore()
-  const { state, prompt, cancel } = useCopilot()
+  const { status, prompt, cancel } = useCopilot()
 
-  // When certain state transitions occur, focus the textarea
+  // When certain status transitions occur, focus the textarea
   // so the user can start typing immediately.
   const textareaRef = React.useRef(null)
   useEffect(() => {
-    if (
-      state === 'generating' ||
-      state === 'resettingFromGenerating' ||
-      state === 'resettingFromIdle' ||
-      state === 'cancelling'
-    ) {
+    if (status === 'working' || status === 'resetting' || status === 'cancelling') {
       textareaRef.current?.focus()
     }
-  }, [state])
+  }, [status])
 
   // When the Copilot opens, auto-focus the input area, so the user can
   // start typing immediately.
@@ -29,7 +24,7 @@ export default function Footer() {
   }, [isOpen])
 
   function submitDraft() {
-    const canSubmit = state === 'idle' && draft !== ''
+    const canSubmit = status === 'idle' && draft !== ''
     if (canSubmit) {
       prompt(draft)
       setDraft('')
@@ -71,13 +66,11 @@ export default function Footer() {
       />
 
       {/* Send button */}
-      {(state === 'idle' || state === 'resettingFromIdle' || state === 'connecting') && (
+      {(status === 'idle' || status === 'resetting' || status === 'connecting') && (
         <button
           type="submit"
           disabled={
-            (state === 'idle' && draft === '') ||
-            state === 'resettingFromIdle' ||
-            state === 'connecting'
+            (status === 'idle' && draft === '') || status === 'resetting' || status === 'connecting'
           }
           className="flex-none disabled:opacity-10"
         >
@@ -86,16 +79,11 @@ export default function Footer() {
       )}
 
       {/* Cancel button */}
-      {(state === 'generating' ||
-        state === 'running' ||
-        state === 'cancelling' ||
-        state === 'resettingFromGenerating') && (
+      {(status === 'working' || status === 'cancelling') && (
         <button
           type="button"
           onClick={() => cancel()}
-          disabled={
-            state === 'running' || state === 'cancelling' || state === 'resettingFromGenerating'
-          }
+          disabled={status === 'cancelling'}
           className="flex-none disabled:opacity-10"
         >
           <StopCircleIcon className="w-8 h-8 mx-2.5 my-2" />
