@@ -5,17 +5,19 @@ import { ArrowUpCircleIcon, StopCircleIcon } from '@heroicons/react/24/solid'
 import { useStore } from '../store'
 
 export default function Footer() {
-  const { isOpen, draft, setDraft } = useStore()
-  const { status, prompt, cancel } = useCopilot()
+  const { isOpen, isResetting, draft, setDraft } = useStore()
+  const { isReady, status, prompt, cancel } = useCopilot()
 
   // When certain status transitions occur, focus the textarea
   // so the user can start typing immediately.
   const textareaRef = React.useRef(null)
   useEffect(() => {
-    if (status === 'working' || status === 'resetting' || status === 'cancelling') {
-      textareaRef.current?.focus()
-    }
+    if (status === 'working' || status === 'cancelling') textareaRef.current?.focus()
   }, [status])
+
+  useEffect(() => {
+    if (isResetting) textareaRef.current?.focus()
+  }, [isResetting])
 
   // When the Copilot opens, auto-focus the input area, so the user can
   // start typing immediately.
@@ -66,12 +68,10 @@ export default function Footer() {
       />
 
       {/* Send button */}
-      {(status === 'idle' || status === 'resetting' || status === 'connecting') && (
+      {status === 'idle' && (
         <button
           type="submit"
-          disabled={
-            (status === 'idle' && draft === '') || status === 'resetting' || status === 'connecting'
-          }
+          disabled={!isReady || (status === 'idle' && draft === '')}
           className="flex-none disabled:opacity-10"
         >
           <ArrowUpCircleIcon className="w-8 h-8 mx-2.5 my-2" />
