@@ -18,6 +18,5 @@ export function StoreProvider({ children, ...props }) {
 
 export function useStore() {
   const store = useContext(StoreContext)
-  // console.log('store', store)
   return store
 }
