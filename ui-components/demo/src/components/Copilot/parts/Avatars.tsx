@@ -4,7 +4,7 @@ export function SmallAvatar(props) {
   return (
     <span
       className={clsx(
-        'inline-flex size-6 items-center justify-center rounded-full border border-black border-opacity-5',
+        'inline-flex size-6 items-center justify-center rounded-full border border-black/5',
         props.className,
       )}
     >
@@ -17,7 +17,7 @@ export function LargeAvatar(props) {
   return (
     <span
       className={clsx(
-        'inline-flex size-12 items-center justify-center rounded-full border border-black border-opacity-5',
+        'inline-flex size-12 items-center justify-center rounded-full border border-black/5',
         props.className,
       )}
     >
