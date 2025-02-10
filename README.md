@@ -24,17 +24,14 @@ Copilot.js is a frontend toolkit to build **product copilots**. It lets you crea
    npm i -D @tailwindcss/typography @tailwindcss/forms
    ```
 
-5. Edit `tailwind.config.js` to use the `typography` and `forms` plugins:
+5. Edit your CSS file to use the `typography` and `forms` plugins:
 
-   ```js
-   // tailwind.config.js
-   import typographyPlugin from "@tailwindcss/typography";
-   import formsPlugin from "@tailwindcss/forms";
-
-   export default {
-     plugins: [typographyPlugin, formsPlugin],
-     // ...
-   };
+   ```css
+   /* CSS */
+   @import "tailwindcss";
+   @plugin "@tailwindcss/typography";
+   @plugin "@tailwindcss/forms";
+   /* ... */
    ```
 
 6. Use `<CopilotProvider>` and `<Copilot>` in your project:
