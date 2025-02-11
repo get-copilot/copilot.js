@@ -1,12 +1,20 @@
 import { createContext, useContext, useState } from 'react'
+import { type CopilotProps } from './props'
 
-const StoreContext = createContext(null)
+type Store = {
+  isResetting: boolean
+  setIsResetting: (value: boolean) => void
+  draft: string
+  setDraft: (value: string) => void
+} & CopilotProps
 
-export function StoreProvider({ children, ...props }) {
+const StoreContext = createContext<Store | null>(null)
+
+export function StoreProvider({ children, ...props }: { children: React.ReactNode } & CopilotProps) {
   const [isResetting, setIsResetting] = useState(false)
   const [draft, setDraft] = useState('')
 
-  const store = {
+  const store: Store = {
     isResetting,
     setIsResetting,
     draft,
@@ -18,5 +26,6 @@ export function StoreProvider({ children, ...props }) {
 
 export function useStore() {
   const store = useContext(StoreContext)
+  if (!store) throw new Error('useStore must be used within a StoreProvider')
   return store
 }

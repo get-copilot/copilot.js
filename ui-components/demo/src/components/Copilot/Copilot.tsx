@@ -7,48 +7,11 @@ import { Footer } from './parts/Footer'
 import { Header } from './parts/Header'
 import { Status } from './parts/Status'
 import { Welcome } from './parts/Welcome'
+import { type CopilotProps, defaultCopilotProps } from './props'
 import { StoreProvider } from './store'
 
-type CopilotProps = {
-  isOpen: boolean
-  id: string
-  className: string
-  headerTitle: string
-  welcomeTitle: string
-  welcomePrompts: string[]
-  userName: string
-  userInitials: string
-  userColor: string
-  assistantName: string
-  assistantInitials: string
-  assistantColor: string
-  enableUndo: boolean
-  onClose: (event) => void
-  onUndo: (event) => void
-  onRedo: (event) => void
-}
-
-const defaultProps: CopilotProps = {
-  isOpen: true,
-  id: undefined,
-  className: undefined,
-  headerTitle: 'Copilot',
-  welcomeTitle: 'How can I help?',
-  welcomePrompts: ['Where is zip code 80201?', 'Convert 1 pound to grams.'],
-  userName: 'You',
-  userInitials: 'Y',
-  userColor: 'bg-zinc-700',
-  assistantName: 'Copilot',
-  assistantInitials: 'AI',
-  assistantColor: 'bg-indigo-600',
-  enableUndo: false,
-  onClose: undefined,
-  onUndo: undefined,
-  onRedo: undefined,
-}
-
 export function Copilot(props: CopilotProps) {
-  const propsWithDefaults = { ...defaultProps, ...props }
+  const propsWithDefaults = { ...defaultCopilotProps, ...props }
   const { messages } = useCopilot()
 
   return (
