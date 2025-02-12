@@ -1,6 +1,6 @@
 import { useCopilot } from '@copilotjs/react'
 import { ArrowUpCircleIcon, StopCircleIcon } from '@heroicons/react/24/solid'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { useStore } from '../store'
 
@@ -10,7 +10,7 @@ export function Footer() {
 
   // When certain status transitions occur, focus the textarea
   // so the user can start typing immediately.
-  const textareaRef = React.useRef<HTMLTextAreaElement | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
     if (status === 'working' || status === 'cancelling') {
@@ -30,20 +30,17 @@ export function Footer() {
     }
   }
 
-  function handleFormSubmit(event) {
+  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     submitDraft()
   }
 
-  function handleKeyDown(event) {
-    // Handle: Shift + Enter
-    if (event.key === 'Enter' && event.shiftKey) {
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.shiftKey && event.key === 'Enter') {
       event.preventDefault()
       setDraft(draft + '\n')
     }
-
-    // Handle: Enter
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (!event.shiftKey && event.key === 'Enter') {
       event.preventDefault()
       submitDraft()
     }
