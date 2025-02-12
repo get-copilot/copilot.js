@@ -34,7 +34,7 @@ export function Conversation() {
   return (
     <div ref={scrollableRef} className="flex-1 overflow-y-scroll">
       <div className="flex flex-col gap-4 px-3 py-4">
-        {paddedMessages.map((message, index) => (
+        {paddedMessages.map((message: any, index: number) => (
           <Message
             key={message.id}
             message={message}

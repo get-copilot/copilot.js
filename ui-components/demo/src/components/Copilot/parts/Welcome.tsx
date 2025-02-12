@@ -22,7 +22,7 @@ export function Welcome() {
 
       {/* Example prompts */}
       <div className="flex flex-col gap-3 px-5 py-6 text-sm/5 text-zinc-600 dark:text-zinc-400">
-        {welcomePrompts.map((text, index) => (
+        {welcomePrompts.map((text: string, index: number) => (
           <button
             key={index}
             onClick={() => {
