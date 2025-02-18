@@ -1,6 +1,6 @@
 import { useCopilot } from '@copilotjs/react'
 import { ArrowUpCircleIcon, StopCircleIcon } from '@heroicons/react/24/solid'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { useStore } from '../store'
 
@@ -10,7 +10,7 @@ export function Footer() {
 
   // When certain status transitions occur, focus the textarea
   // so the user can start typing immediately.
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
     if (status === 'working' || status === 'cancelling') {
@@ -30,20 +30,17 @@ export function Footer() {
     }
   }
 
-  function handleFormSubmit(event) {
+  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     submitDraft()
   }
 
-  function handleKeyDown(event) {
-    // Handle: Shift + Enter
-    if (event.key === 'Enter' && event.shiftKey) {
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.shiftKey && event.key === 'Enter') {
       event.preventDefault()
       setDraft(draft + '\n')
     }
-
-    // Handle: Enter
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (!event.shiftKey && event.key === 'Enter') {
       event.preventDefault()
       submitDraft()
     }
@@ -64,7 +61,7 @@ export function Footer() {
         onChange={(event) => setDraft(event.target.value)}
         onKeyDown={handleKeyDown}
         spellCheck={false}
-        className="flex-1 resize-none border-0 bg-white py-3 pl-3 pr-1 text-sm/5 placeholder:text-zinc-400 focus:ring-0 dark:bg-zinc-950 dark:placeholder:text-zinc-600"
+        className="flex-1 resize-none border-0 bg-white py-3 pr-1 pl-3 text-sm/5 placeholder:text-zinc-400 focus:ring-0 dark:bg-zinc-950 dark:placeholder:text-zinc-600"
       />
 
       {/* Send button */}
@@ -74,8 +71,7 @@ export function Footer() {
           disabled={!isReady || (status === 'idle' && draft === '')}
           className="flex-none disabled:opacity-10"
         >
-          {/* <ArrowUpCircleIcon className="mx-2 my-2 h-7 w-7" /> */}
-          <ArrowUpCircleIcon className="mx-2 my-2 h-7 w-7" />
+          <ArrowUpCircleIcon className="m-2 size-7" />
         </button>
       )}
 
@@ -87,7 +83,7 @@ export function Footer() {
           disabled={status === 'cancelling'}
           className="flex-none disabled:opacity-10"
         >
-          <StopCircleIcon className="mx-2 my-2 h-7 w-7" />
+          <StopCircleIcon className="m-2 size-7" />
         </button>
       )}
     </form>

@@ -10,10 +10,10 @@ export function Header() {
     <div className="flex flex-none flex-row justify-between border-b border-zinc-200 dark:border-zinc-800">
       {/* Close button */}
       <button
-        onClick={() => onClose?.()}
+        onClick={() => onClose?.({ type: 'close', data: {} })}
         className="flex-none hover:bg-zinc-100 disabled:opacity-10 dark:hover:bg-zinc-900"
       >
-        <XMarkIcon className="mx-3 my-3 h-5 w-5" />
+        <XMarkIcon className="m-3 size-5" />
       </button>
 
       {/* Title */}
@@ -29,7 +29,7 @@ export function Header() {
         disabled={isResetting}
         className="flex-none hover:bg-zinc-100 disabled:opacity-10 dark:hover:bg-zinc-900"
       >
-        <DocumentIcon className="mx-3 my-3 h-5 w-5" />
+        <DocumentIcon className="m-3 size-5" />
       </button>
     </div>
   )

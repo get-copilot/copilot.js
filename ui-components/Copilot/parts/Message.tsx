@@ -1,3 +1,4 @@
+import Copilot from '@copilotjs/react'
 import { ArrowUturnLeftIcon, ArrowUturnRightIcon } from '@heroicons/react/16/solid'
 import clsx from 'clsx'
 import Markdown from 'react-markdown'
@@ -5,7 +6,7 @@ import remarkGfm from 'remark-gfm'
 import { useStore } from '../store'
 import { SmallAvatar } from './Avatars'
 
-export function Message({ message, showToolbar = false }) {
+export function Message({ message, showToolbar = false }: { message: Copilot.Message; showToolbar?: boolean }) {
   const { userName, userInitials, userColor, assistantName, assistantInitials, assistantColor } = useStore()
 
   if (message.object === 'thread.message')
@@ -26,7 +27,7 @@ export function Message({ message, showToolbar = false }) {
             To change the text style, use the `prose` classes in 
             https://github.com/tailwindlabs/tailwindcss-typography?tab=readme-ov-file#basic-usage
           */}
-          <div className="prose prose-sm prose-zinc max-w-none dark:prose-invert">
+          <div className="prose prose-sm prose-zinc dark:prose-invert max-w-none">
             <Markdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -65,13 +66,13 @@ export function Message({ message, showToolbar = false }) {
           <div className="text-sm/6 font-semibold">{assistantName}</div>
 
           {/* Message body */}
-          <div className="prose prose-sm prose-zinc max-w-none dark:prose-invert">Working...</div>
+          <div className="prose prose-sm prose-zinc dark:prose-invert max-w-none">Working...</div>
         </div>
       </div>
     )
 }
 
-function getBodyFromMessage(message) {
+function getBodyFromMessage(message: Copilot.ThreadMessage) {
   const body = message.content.reduce((body, part) => {
     if (part.type === 'text') body += part.text.value ?? part.text
     return body
@@ -79,22 +80,22 @@ function getBodyFromMessage(message) {
   return message.status === 'in_progress' ? body + '●' : body
 }
 
-function MessageToolbar({ message, className }) {
+function MessageToolbar({ message, className }: { message: Copilot.Message; className?: string }) {
   const { enableUndo } = useStore()
   return (
-    <div className={clsx(className, '-ml-1 mt-0.5 flex flex-row gap-1')}>
+    <div className={clsx(className, 'mt-0.5 -ml-1 flex flex-row gap-1')}>
       {enableUndo && <UndoRedoButton message={message} />}
     </div>
   )
 }
 
-function UndoRedoButton({ message }) {
+function UndoRedoButton({ message }: { message: Copilot.Message }) {
   const { onUndo, onRedo } = useStore()
   return (
     <>
       {message.isUndoable && (
         <button
-          onClick={() => onUndo?.()}
+          onClick={() => onUndo?.({ type: 'undo', data: {} })}
           className="flex-none text-zinc-400 hover:text-black dark:text-zinc-600 dark:hover:text-white"
         >
           <ArrowUturnLeftIcon className="m-1 size-4" />
@@ -103,7 +104,7 @@ function UndoRedoButton({ message }) {
 
       {message.isRedoable && (
         <button
-          onClick={() => onRedo?.()}
+          onClick={() => onRedo?.({ type: 'redo', data: {} })}
           className="flex-none text-zinc-400 hover:text-black dark:text-zinc-600 dark:hover:text-white"
         >
           <ArrowUturnRightIcon className="m-1 size-4" />
