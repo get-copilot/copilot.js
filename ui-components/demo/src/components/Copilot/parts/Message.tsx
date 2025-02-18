@@ -1,3 +1,4 @@
+import Copilot from '@copilotjs/react'
 import { ArrowUturnLeftIcon, ArrowUturnRightIcon } from '@heroicons/react/16/solid'
 import clsx from 'clsx'
 import Markdown from 'react-markdown'
@@ -5,7 +6,7 @@ import remarkGfm from 'remark-gfm'
 import { useStore } from '../store'
 import { SmallAvatar } from './Avatars'
 
-export function Message({ message, showToolbar = false }: { message: any; showToolbar?: boolean }) {
+export function Message({ message, showToolbar = false }: { message: Copilot.Message; showToolbar?: boolean }) {
   const { userName, userInitials, userColor, assistantName, assistantInitials, assistantColor } = useStore()
 
   if (message.object === 'thread.message')
@@ -71,7 +72,7 @@ export function Message({ message, showToolbar = false }: { message: any; showTo
     )
 }
 
-function getBodyFromMessage(message: any) {
+function getBodyFromMessage(message: Copilot.ThreadMessage) {
   const body = message.content.reduce((body, part) => {
     if (part.type === 'text') body += part.text.value ?? part.text
     return body
@@ -79,7 +80,7 @@ function getBodyFromMessage(message: any) {
   return message.status === 'in_progress' ? body + '●' : body
 }
 
-function MessageToolbar({ message, className }: { message: any; className?: string }) {
+function MessageToolbar({ message, className }: { message: Copilot.Message; className?: string }) {
   const { enableUndo } = useStore()
   return (
     <div className={clsx(className, 'mt-0.5 -ml-1 flex flex-row gap-1')}>
@@ -88,7 +89,7 @@ function MessageToolbar({ message, className }: { message: any; className?: stri
   )
 }
 
-function UndoRedoButton({ message }: { message: any }) {
+function UndoRedoButton({ message }: { message: Copilot.Message }) {
   const { onUndo, onRedo } = useStore()
   return (
     <>
