@@ -1,4 +1,4 @@
-import { useCopilot } from '@copilotjs/react'
+import Copilot, { useCopilot } from '@copilotjs/react'
 import { useEffect, useMemo, useRef } from 'react'
 import { Message } from './Message'
 
@@ -8,12 +8,15 @@ export function Conversation() {
 
   // Pad the messages with a busy assistant message, if needed.
   const paddedMessages = useMemo(() => {
-    const emptyAssistantMessage = {
+    const emptyAssistantMessage: Copilot.Message = {
       status: 'in_progress',
       id: 'msg_busy',
       object: 'thread.message',
+      threadId: '',
       role: 'assistant',
       content: [{ type: 'text', text: { value: '' } }],
+      isUndoable: null,
+      isRedoable: null,
     }
     const lastMessage = messages.at(-1)
     const paddingIsNeeded =

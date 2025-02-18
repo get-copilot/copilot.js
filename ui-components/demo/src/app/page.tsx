@@ -22,7 +22,7 @@ export default function App() {
         <Button onClick={decrement}>
           <MinusIcon className="mx-3 my-3 h-5 w-5" />
         </Button>
-        <span className="flex w-20 flex-row items-center justify-center border-l border-r border-zinc-200 text-xl/7 dark:border-zinc-800">
+        <span className="flex w-20 flex-row items-center justify-center border-r border-l border-zinc-200 text-xl/7 dark:border-zinc-800">
           {count}
         </span>
         <Button onClick={increment}>
